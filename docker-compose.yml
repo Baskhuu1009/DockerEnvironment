@@ -1,0 +1,33 @@
+version: '3'
+services:
+  oracle:
+    build:
+      context: .
+      dockerfile: ./oracle/Dockerfile
+    container_name: oracle
+    ports:
+      - 1521:1521
+    volumes:
+      - ./oracle/dumps/:/dumps/
+      - ./oracle/initdb.d/:/initdb.d/
+    environment:
+      - ORACLE_PWD=password
+      - ORACLE_CHARACTERSET=AL32UTF8
+    networks:
+      - containers-network
+      
+  wapi:
+    build:
+      context: .
+      dockerfile: ./wapi/Dockerfile
+    container_name: wapi
+    ports: 
+      - "5432:5432" 
+    volumes:
+      - ./wapi:/wapi
+    networks: 
+      - containers-network
+  
+networks:
+  containers-network:
+    driver: bridge
